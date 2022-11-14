@@ -1,26 +1,20 @@
 import { Head } from '$fresh/runtime.ts'
 import { Handlers, PageProps } from '$fresh/server.ts'
+import { IPost } from '../../../components/Post.tsx'
 
-type Post = {
-	id: number
-	title: string
-	body: string
-	userId: number
-}
-
-export const handler: Handlers<Post | null> = {
+export const handler: Handlers<IPost | null> = {
 	async GET(_, ctx) {
 		const { id } = ctx.params
 		const resp = await fetch(`https://jsonplaceholder.typicode.com/posts/${id}`)
 		if (resp.status === 404) {
 			return ctx.render(null)
 		}
-		const post: Post = await resp.json()
+		const post: IPost = await resp.json()
 		return ctx.render(post)
 	},
 }
 
-export default function Page({ data }: PageProps<Post | null>) {
+export default function Page({ data }: PageProps<IPost | null>) {
 	if (!data) {
 		return <h1>Post not found</h1>
 	}
